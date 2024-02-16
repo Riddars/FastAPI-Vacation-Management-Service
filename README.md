@@ -45,7 +45,7 @@
 ## Установка
 1. Клонируйте репозиторий.
 2. Установите требуемые зависимости, используя `pip install -r requirements.txt`.
-3. Установие базу данных 'vacations_staff.sql', я использовал MySQL Workbench 8.0 CE и MySQL Server 8.0
+3. Установие базу данных `vacations_staff.sql`, я использовал MySQL Workbench 8.0 CE и MySQL Server 8.0
 4. Настройте подключение к базе данных в `database.py`.
 5. Запустите сервер, используя `uvicorn main:app --reload`.
 
