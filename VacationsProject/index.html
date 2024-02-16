@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FastAPI Vacation Service</title>
+    <style>
+        form {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>FastAPI Vacation Service</h1>
+
+    <form id="createVacationForm">
+        <label for="employee_id">Employee ID:</label>
+        <input type="number" id="employee_id" name="employee_id" required><br><br>
+
+        <label for="start_date">Start Date:</label>
+        <input type="date" id="start_date" name="start_date" required><br><br>
+
+        <label for="end_date">End Date:</label>
+        <input type="date" id="end_date" name="end_date" required><br><br>
+
+        <button type="submit">Create Vacation</button>
+    </form>
+
+    <script>
+        document.getElementById('createVacationForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Предотвращение отправки формы по умолчанию
+
+            const employeeId = document.getElementById('employee_id').value;
+            const startDate = document.getElementById('start_date').value;
+            const endDate = document.getElementById('end_date').value;
+
+            const url = `http://127.0.0.1:8000/vacations/VacationCreate?employee_id=${employeeId}&start_date=${startDate}&end_date=${endDate}`;
+
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json'
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Успех:', data);
+                alert('Отпуск успешно создан!');
+            })
+            .catch(error => {
+                console.error('Успех!:', error);
+                alert('Произошла ошибка. Проверьте корректность данных и их пересечение с существующим отпусками для данного сотрудника.: ');
+            });
+        });
+    </script>
+
+    <form action="http://127.0.0.1:8000/vacations/read_latest_vacations/" method="GET" onsubmit="event.preventDefault(); window.location.href = this.action + this.querySelector('#employee_id_2').value; return false;">
+        <label for="employee_id_2">Идентификатор сотрудника:</label>
+        <input type="number" id="employee_id_2" name="employee_id" required><br><br>
+        <input type="submit" value="Проверить отпуски этого сотрудника">
+    </form>
+    <div id="latestVacationsInfo"></div>
+
+
+    <form action="http://127.0.0.1:8000/vacations/read_vacations_by_date" method="GET">
+        <label for="start_date_1">Начальная дата:</label>
+        <input type="date" id="start_date_1" name="start_date" required><br><br>
+        <label for="end_date_2">Конечная дата:</label>
+        <input type="date" id="end_date_2" name="end_date" required><br><br>
+        <input type="submit" value="Проверить отпуски">
+    </form>
+
+
+    <form id="deleteVacationForm">
+        <label for="vacation_id">Идентификатор отпуска:</label>
+        <input type="number" id="vacation_id" name="vacation_id" required><br><br>
+        <button type="button" onclick="deleteVacation()">Удалить отпуск</button>
+    </form>
+
+    <script>
+        function deleteVacation() {
+            const vacationId = document.getElementById('vacation_id').value;
+
+            const url = `http://127.0.0.1:8000/vacations/delete/${vacationId}`;
+
+            fetch(url, {
+                method: 'DELETE',
+                headers: {
+                    'Accept': 'application/json'
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Успех:', data);
+                alert('Отпуск успешно удален!');
+            })
+            .catch(error => {
+                console.error('Ошибка:', error);
+                alert('Произошла ошибка при удалении отпуска: ' + error.message);
+            });
+        }
+    </script>
+</body>
+</html>
